@@ -63,7 +63,7 @@ jobs:
     - name: Prepare Allure Report for Pages
       run: |
         mkdir -p public
-        cp -r sicredi/target/allure-report/* public
+        if [ -d "sicredi/target/allure-report" ]; then cp -r sicredi/target/allure-report/* public; else echo "Allure report directory not found"; fi
 
   pages:
     runs-on: ubuntu-latest
@@ -73,7 +73,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Deploy Allure Report
-      run: cp -r target/allure-report/* public
+      run: |
+        mkdir -p public
+        cp -r sicredi/target/allure-report/* public || true
 
     - name: Upload to GitHub Pages
       uses: actions/upload-pages-artifact@v1
