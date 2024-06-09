@@ -56,10 +56,22 @@ jobs:
         name: allure-report
         path: target/allure-report
 
-    - name: Deploy Allure Report
+    - name: Prepare Allure Report for Pages
       run: |
         mkdir -p public
         cp -r target/allure-report/* public
-      artifacts:
-        paths:
-          - public
+
+  pages:
+    runs-on: ubuntu-latest
+    needs: clone-and-build
+    steps:
+    - name: Checkout GitHub Repository
+      uses: actions/checkout@v2
+
+    - name: Deploy Allure Report
+      run: cp -r target/allure-report/* public
+
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: public
